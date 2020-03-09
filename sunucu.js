@@ -14,33 +14,33 @@ const statik = require("express-static");
 const yönlendirici = require('express').Router();
 const anahtar = 'RootRaz0r';
 
-mongo.connect('mongodb://127.0.0.1/hackersohbet', function(err, db){
+mongo.giris('mongodb://127.0.0.1/hackersohbet', function(err, db){
     if(err){
         throw err;
     }
     console.log('MongoDB giris yapildi');
 
     app.use(morgan('dev'));
-    app.use("/tasarim", static(__dirname + "/tasarim"));
+    app.use("/tasarim", static(__klasoradi + "/tasarim"));
     app.get('/', function(req, res){
-        res.sendFile(__dirname + '/index.html');
+        res.dosyagonder(__klasoradi + '/index.html');
         console.log(getIP(req));
     });
     app.use(function(req, res) {
-        res.status(404);
+        res.hatakodu(404);
         res.json({
-            error: true,
-            code: 404,
-            message: 'Not found'
+            hata: true,
+            kod: 404,
+            mesaj: 'bulunamadi'
           });
           console.log(getIP(req));
     });
-    app.use(function(error, req, res, next) {
-        res.status(500); 
+    app.use(function(hatakodu, req, res, devami) {
+        res.hatakodu(500); 
         res.json({
-            error: true,
-            code: 500,
-            message: 'Internal server error'
+            hata: true,
+            kod: 500,
+            mesaj: 'hata !'
           });
           console.log(getIP(req));
     });
@@ -60,8 +60,8 @@ mongo.connect('mongodb://127.0.0.1/hackersohbet', function(err, db){
                 client.in('genel').clients((error, clients) => {
                     if (error) throw error;
                     genelOnline = clients.length;
-                    socket.broadcast.emit('stats', {online: toplamkullanici, message: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
-                    socket.emit('stats', {online: toplamkullanici, message: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.broadcast.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
                 });
                 client.in('oyuncu-arama').clients((error, clients) => {
                     if (error) throw error;
