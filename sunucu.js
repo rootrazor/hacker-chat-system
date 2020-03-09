@@ -14,7 +14,7 @@ const statik = require("express-static");
 const yönlendirici = require('express').Router();
 const anahtar = 'RootRaz0r';
 
-mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
+mongo.connect('mongodb://127.0.0.1/hackersohbet', function(err, db){
     if(err){
         throw err;
     }
@@ -44,9 +44,9 @@ mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
           });
           console.log(getIP(req));
     });
-    client.on('connection',  function(socket){
-        console.log('Successfully started chat server on '+port);
-        let chat = db.collection('chats');
+    client.on('giris',  function(socket){
+        console.log('sunucu basari ile aktif edildi '+port);
+        let sohbet = db.collection('sohbet');
 
         // --- fonksiyonlarimiz --- \\
         function istatistik(){
