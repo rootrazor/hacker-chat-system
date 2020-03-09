@@ -48,52 +48,52 @@ mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
         console.log('Successfully started chat server on '+port);
         let chat = db.collection('chats');
 
-        // --- FUNCTIONS START --- \\
-        function sendStats(){
-            let totalOnline = Object.keys(client.connected).length;
-            let totalMessage = 0;
+        // --- fonksiyonlarimiz --- \\
+        function istatistik(){
+            let toplamkullanici = Object.keys(client.connected).length;
+            let toplammesaj = 0;
 
             chat.find().count(function(err, res){
-                totalMessage = res;
+                toplammesaj = res;
                 var genelOnline = 0;
                 var oyuncuAramaOnline = 0;
                 client.in('genel').clients((error, clients) => {
                     if (error) throw error;
                     genelOnline = clients.length;
-                    socket.broadcast.emit('stats', {online: totalOnline, message: totalMessage, rooms: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
-                    socket.emit('stats', {online: totalOnline, message: totalMessage, rooms: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.broadcast.emit('stats', {online: toplamkullanici, message: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.emit('stats', {online: toplamkullanici, message: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
                 });
                 client.in('oyuncu-arama').clients((error, clients) => {
                     if (error) throw error;
                     oyuncuAramaOnline = clients.length;
-                    socket.broadcast.emit('stats', {online: totalOnline, message: totalMessage, rooms: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
-                    socket.emit('stats', {online: totalOnline, message: totalMessage, rooms: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.broadcast.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
                 });
                 
             });
         }
        
-        socket.on('joinroom', function(r) {
-            let room = r.room;
-            if(room == 'genel' || room == 'oyuncu-arama'){
+        socket.on('odayagir', function(r) {
+            let kanal = r.room;
+            if(kanal == 'genel' || kanal == 'oyuncu-arama'){
                 if(socket.room)
-                socket.leave(socket.room);
-                socket.join(room);
-                getChatHistory(room);
+                socket.cikis(socket.kanal);
+                socket.giris(kanal);
+                sohbetloglari(kanal);
             }else{
-                let room = 'genel';
-                if(socket.room)
-                socket.leave(socket.room);
-                socket.join(room);
-                getChatHistory(room);
+                let kanal = 'genel';
+                if(socket.kanal)
+                socket.cikis(socket.kanal);
+                socket.giris(kanal);
+                sohbetloglari(kanal);
             }
         });
         
-        socket.on('send', function(data){
-            let name = data.name;
-            let message = xss(striptags(data.message));
-            let time = data.time;
-            let room = data.room;
+        socket.on('gonder', function(data){
+            let isim = data.isim;
+            let mesaj = xss(striptags(data.mesaj));
+            let zaman = data.zaman;
+            let oda = data.oda;
             let avatar = data.avatar;
             if(name == ''){
                 fallBack('Lütfen bir kullanıcı adı belirleyin!', false);
@@ -106,25 +106,25 @@ mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
             }else if(typeof avatar != "number"){
                 fallBack('Geçersiz avatar', false);
             }else {
-                handleMessage(message, data);
-                console.log(data.name+': '+data.message+' ('+data.time+' in '+data.room+')');
+                handleMessage(mesaj, data);
+                console.log(data.isim+': '+data.isim+' ('+data.zaman+' in '+data.oda+')');
             }
         });
 
         socket.on('sil', function(data){
             chat.remove({}, function(){
                 socket.emit('silindi');
-                sendStats();
+                istatistikler();
             });
         });
 
         socket.on('giris', function(){
-            sendStats();
+            istatistikler();
         });
         socket.on('cikis', function(){
-            sendStats();
+            istatistikler();
         });
-        sendStats();
+        istatistikler();
     });
     app.listen(portp);
     console.log('basari ile start verildi '+portp);
