@@ -1,19 +1,19 @@
-const port = 4000;
+const portumuz = 4000;
 const portp = 4001;
 const mongo = require('mongodb').MongoClient;
-const app = require('express')();
+const uygulamamiz = require('express')();
 const http = require('http').Server(app);
 const socketioJwt = require("socketio-jwt");
-const client = require('socket.io')(http).listen(port).sockets;
-const striptags = require('striptags');
-const xss = require('xss');
-const path = require('path');
-const getIP = require('ipware')().get_ip;
-const room = 'genel';
+const kullanici = require('socket.io')(http).listen(port).sockets;
+const striptaglarimiz = require('striptags');
+const xssengelle = require('xss');
+const klasor = require('path');
+const ipgetir = require('ipware')().get_ip;
+const kanal = 'genel';
 const static = require("express-static");
 const router = require('express').Router();
 const morgan = require('morgan');
-const jwt_secret = 'RootRaz0r';
+const anahtar = 'RootRaz0r';
 
 mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
     if(err){
@@ -22,7 +22,7 @@ mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
     console.log('MongoDB giris yapildi');
 
     app.use(morgan('dev'));
-    app.use("/assets", static(__dirname + "/assets"));
+    app.use("/tasarim", static(__dirname + "/tasarim"));
     app.get('/', function(req, res){
         res.sendFile(__dirname + '/index.html');
         console.log(getIP(req));
