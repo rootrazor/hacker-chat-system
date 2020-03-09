@@ -1,9 +1,9 @@
 {
-  "name": "rootraz0r",
+  "isim": "rootraz0r",
   "version": "1.0.0",
-  "description": "rootraz0r",
-  "main": "sunucu.js",
-  "dependencies": {
+  "aciklama": "rootraz0r",
+  "ana": "sunucu.js",
+  "eklentiler": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-static": "^1.2.5",
@@ -19,9 +19,9 @@
     "xss": "^0.3.7"
   },
   "devDependencies": {},
-  "scripts": {
-    "start": "node server.js"
+  "scriptler": {
+    "baslatma": "node sunucu.js"
   },
-  "author": "rootraz0r",
-  "license": "MIT"
+  "kullanici": "rootraz0r",
+  "lisans": "MIT"
 }
