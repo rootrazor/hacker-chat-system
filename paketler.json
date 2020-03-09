@@ -18,7 +18,7 @@
     "striptags": "^3.1.1",
     "xss": "^0.3.7"
   },
-  "devDependencies": {},
+  "Digerleri": {},
   "scriptler": {
     "baslatma": "node sunucu.js"
   },
