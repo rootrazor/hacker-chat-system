@@ -1,6 +1,6 @@
 const portumuz = 4000;
 const portp = 4001;
-const mongo = require('mongodb').MongoClient;
+const veritabani = require('mongodb').MongoClient;
 const uygulamamiz = require('express')();
 const http = require('http').Server(app);
 const socketioJwt = require("socketio-jwt");
@@ -10,9 +10,8 @@ const xssengelle = require('xss');
 const klasor = require('path');
 const ipgetir = require('ipware')().get_ip;
 const kanal = 'genel';
-const static = require("express-static");
-const router = require('express').Router();
-const morgan = require('morgan');
+const statik = require("express-static");
+const yönlendirici = require('express').Router();
 const anahtar = 'RootRaz0r';
 
 mongo.connect('mongodb://127.0.0.1/mongochat', function(err, db){
