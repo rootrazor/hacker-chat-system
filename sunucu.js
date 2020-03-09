@@ -66,17 +66,17 @@ mongo.connect('mongodb://127.0.0.1/hackersohbet', function(err, db){
                 client.in('oyuncu-arama').clients((error, clients) => {
                     if (error) throw error;
                     oyuncuAramaOnline = clients.length;
-                    socket.broadcast.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
-                    socket.emit('stats', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.broadcast.emit('istatistikler', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
+                    socket.emit('istatistikler', {online: toplamkullanici, mesaj: toplammesaj, odalar: {genel: genelOnline, oyuncu_arama: oyuncuAramaOnline}});
                 });
                 
             });
         }
        
         socket.on('odayagir', function(r) {
-            let kanal = r.room;
+            let kanal = r.oda;
             if(kanal == 'genel' || kanal == 'oyuncu-arama'){
-                if(socket.room)
+                if(socket.oda)
                 socket.cikis(socket.kanal);
                 socket.giris(kanal);
                 sohbetloglari(kanal);
@@ -95,18 +95,18 @@ mongo.connect('mongodb://127.0.0.1/hackersohbet', function(err, db){
             let zaman = data.zaman;
             let oda = data.oda;
             let avatar = data.avatar;
-            if(name == ''){
-                fallBack('Lütfen bir kullanıcı adı belirleyin!', false);
-            }else if(message == ''){
-                fallBack('Lütfen bir mesaj girin!', false);
-            }else if(message.length > 100){
-                fallBack('Mesaj uzunluğu maksimum 100 karakter içermelidir', false);
-            }else if(message.length < 1){
-                fallBack('Mesaj uzunluğu minimum 1 karakter içermelidir', false);
+            if(isim == ''){
+                GeriDonus('Lütfen bir kullanıcı adı belirleyin!', false);
+            }else if(mesaj == ''){
+                GeriDonus('Lütfen bir mesaj girin!', false);
+            }else if(mesaj.length > 100){
+                GeriDonus('Mesaj uzunluğu maksimum 100 karakter içermelidir', false);
+            }else if(mesaj.length < 1){
+                GeriDonus('Mesaj uzunluğu minimum 1 karakter içermelidir', false);
             }else if(typeof avatar != "number"){
-                fallBack('Geçersiz avatar', false);
+                GeriDonus('Geçersiz avatar', false);
             }else {
-                handleMessage(mesaj, data);
+                KullaniciMesaji(mesaj, data);
                 console.log(data.isim+': '+data.isim+' ('+data.zaman+' in '+data.oda+')');
             }
         });
